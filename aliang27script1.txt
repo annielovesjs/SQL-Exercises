@@ -1,0 +1,36 @@
+SHOW databases;
+
+DROP DATABASE IF EXISTS aliang27assign2db;
+-- create database to use 
+CREATE DATABASE aliang27assign2db;
+
+USE aliang27assign2db;
+
+GRANT USAGE ON *.* TO 'ta'@'localhost';
+DROP USER 'ta'@'localhost';
+CREATE USER 'ta'@'localhost' IDENTIFIED BY 'cs3319';
+GRANT ALL PRIVILEGES ON aliang27assign2db.* TO 'ta'@'localhost';
+FLUSH PRIVILEGES;
+
+SHOW TABLES;
+
+-- create patient, doctors, hospital and treats tables
+CREATE TABLE Patient (OHIP INT NOT NULL, FirstName VARCHAR(20), LastName VARCHAR(20), PRIMARY KEY(OHIP));
+
+CREATE TABLE Doctors (LicenseNum VARCHAR(4) NOT NULL, FirstName VARCHAR(20), LastName VARCHAR(20), Specialty VARCHAR(30), LicenseDate DATE, PRIMARY KEY(LicenseNum));
+
+CREATE TABLE Hospital (HospitalCode VARCHAR(3) NOT NULL, Name VARCHAR(20), City VARCHAR(20), Province VARCHAR(2), BedNum INT, PRIMARY KEY(HospitalCode));
+
+CREATE TABLE Treats (DoctorNum VARCHAR(4), PatientOHIP INT, PRIMARY KEY(DoctorNum, PatientOHIP), CONSTRAINT FOREIGN KEY(DoctorNum) REFERENCES Doctors(LicenseNum) ON DELETE CASCADE, FOREIGN KEY(PatientOHIP) REFERENCES Patient(OHIP) ON DELETE CASCADE);
+
+-- add in foreign keys to tables 
+ALTER TABLE Doctors ADD Hospital VARCHAR(3);
+ALTER TABLE Doctors ADD CONSTRAINT FOREIGN KEY (Hospital) REFERENCES Hospital(HospitalCode); 
+
+ALTER TABLE Hospital ADD ManagerID VARCHAR(4);
+ALTER TABLE Hospital ADD CONSTRAINT FOREIGN KEY (ManagerID) REFERENCES Doctors(LicenseNum);
+
+ALTER TABLE Hospital ADD MgrStartDate DATE;
+
+SHOW TABLES;
+

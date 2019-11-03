@@ -1,0 +1,81 @@
+USE aliang27assign2db;
+
+-- load in patient data from local file 
+SELECT * FROM Patient;
+LOAD DATA LOCAL INFILE 'loaddatafall2019.txt' INTO TABLE Patient FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n';
+
+-- add personal patient data
+SELECT * FROM Patient;
+INSERT INTO `Patient` VALUES (250991267, 'Annie', 'Liang');
+
+-- add in data for doctors
+SELECT * FROM Doctors;
+INSERT INTO `Doctors` VALUES ('RD34', 'Bernie', 'Kavorikian', 'Urologist', DATE '1980-09-09', NULL);
+INSERT INTO `Doctors` VALUES ('GD56', 'Joey', 'Shabado', 'Podiatrist', DATE '1960-06-24', NULL);
+INSERT INTO `Doctors` VALUES ('HT45', 'Ross', 'Clooney', 'Surgeon', DATE '1987-06-20', NULL);
+INSERT INTO `Doctors` VALUES ('YT67', 'Ben', 'Spock', 'Pediatrician', DATE '1955-02-20', NULL);
+INSERT INTO `Doctors` VALUES ('JK78', 'Mandy', 'Webster', 'Surgeon', DATE '1990-08-08', NULL);
+INSERT INTO `Doctors` VALUES ('SE66', 'Colleen', 'Aziz', 'Surgeon', DATE '1989-08-24', NULL);
+INSERT INTO `Doctors` VALUES ('SE69', 'Mike', 'Siu', 'Surgeon', DATE '1989-01-24', NULL);
+
+-- add in hospital data
+SELECT * FROM Hospital;
+INSERT INTO `Hospital` VALUES ('BBC', 'St. Joseph', 'London', 'On', 1000, NULL, NULL);
+INSERT INTO `Hospital` VALUES ('ABC', 'Victoria', 'London', 'On', 1600, NULL, NULL);
+INSERT INTO `Hospital` VALUES ('DDE', 'Victoria', 'Victoria', 'BC', 1200, NULL, NULL);
+
+SELECT * FROM Hospital;
+
+-- add data for treats table 
+SELECT * FROM Treats;
+INSERT INTO `Treats` VALUES ('GD56', 110112113);
+INSERT INTO `Treats` VALUES ('HT45', 444555666);
+INSERT INTO `Treats` VALUES ('JK78', 444555666);
+INSERT INTO `Treats` VALUES ('SE66', 111222333);
+INSERT INTO `Treats` VALUES ('YT67', 111222333);
+INSERT INTO `Treats` VALUES ('JK78', 111222333);
+INSERT INTO `Treats` VALUES ('GD56', 333444555);
+INSERT INTO `Treats` VALUES ('YT67', 667766777);
+INSERT INTO `Treats` VALUES ('JK78', 667766777);
+INSERT INTO `Treats` VALUES ('GD56', 667766777);
+INSERT INTO `Treats` VALUES ('YT67', 111222111);
+INSERT INTO `Treats` VALUES ('YT67', 250991267);
+
+SELECT * FROM Treats;
+
+-- add in the hospital each doctor works in
+SELECT * FROM Doctors;
+UPDATE Doctors SET Hospital="BBC" WHERE LicenseNum="RD34";
+UPDATE Doctors SET Hospital="BBC" WHERE LicenseNum="GD56";
+UPDATE Doctors SET Hospital="DDE" WHERE LicenseNum="HT45";
+UPDATE Doctors SET Hospital="DDE" WHERE LicenseNum="YT67";
+UPDATE Doctors SET Hospital="BBC" WHERE LicenseNum="JK78";
+UPDATE Doctors SET Hospital="ABC" WHERE LicenseNum="SE66";
+UPDATE Doctors SET Hospital="ABC" WHERE LicenseNum="SE69";
+
+SELECT * FROM Doctors;
+
+-- add the heads for each hospital
+SELECT * FROM Hospital;
+UPDATE Hospital SET ManagerID="GD56" WHERE Name="St. Joseph";
+UPDATE Hospital SET MgrStartDate="1999-09-10" WHERE Name="St. Joseph";
+UPDATE Hospital SET ManagerID="YT67" WHERE HospitalCode="DDE";
+UPDATE Hospital SET MgrStartDate="1997-12-07" WHERE HospitalCode="DDE";
+UPDATE Hospital SET ManagerID="SE66" WHERE HospitalCode="ABC";
+UPDATE Hospital SET MgrStartDate="1994-12-05" WHERE HospitalCode="ABC";
+
+SELECT * FROM Hospital;
+
+-- update patient’s last name to Brown if their OHIP is 111222111
+SELECT * FROM Patient;
+
+UPDATE Patient SET LastName="Brown" WHERE OHIP=111222111;
+
+SELECT * FROM Patient;
+
+-- update patient record who was treated by Spock to be recorded as treated by Clooney
+SELECT * FROM Treats;
+
+UPDATE Treats SET DoctorNum = (SELECT LicenseNum FROM Doctors WHERE LastName="Clooney") WHERE DoctorNum = (SELECT LicenseNum FROM Doctors WHERE LastName="Spock");
+
+SELECT * FROM Treats;

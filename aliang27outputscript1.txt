@@ -1,0 +1,141 @@
+Warning: Using a password on the command line interface can be insecure.
+--------------
+SHOW databases
+--------------
+
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| aliang27assign2db  |
+| databasescourse    |
+| group16            |
+| hi                 |
+| mysql              |
+| performance_schema |
+| vetoffice          |
++--------------------+
+8 rows in set (0.00 sec)
+
+--------------
+DROP DATABASE IF EXISTS aliang27assign2db
+--------------
+
+Query OK, 5 rows affected (0.10 sec)
+
+--------------
+CREATE DATABASE aliang27assign2db
+--------------
+
+Query OK, 1 row affected (0.00 sec)
+
+--------------
+GRANT USAGE ON *.* TO 'ta'@'localhost'
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+DROP USER 'ta'@'localhost'
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+CREATE USER 'ta'@'localhost' IDENTIFIED BY 'cs3319'
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+GRANT ALL PRIVILEGES ON aliang27assign2db.* TO 'ta'@'localhost'
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+FLUSH PRIVILEGES
+--------------
+
+Query OK, 0 rows affected (0.00 sec)
+
+--------------
+SHOW TABLES
+--------------
+
+Empty set (0.00 sec)
+
+--------------
+CREATE TABLE Patient (OHIP INT NOT NULL, FirstName VARCHAR(20), LastName VARCHAR(20), PRIMARY KEY(OHIP))
+--------------
+
+Query OK, 0 rows affected (0.25 sec)
+
+--------------
+CREATE TABLE Doctors (LicenseNum VARCHAR(4) NOT NULL, FirstName VARCHAR(20), LastName VARCHAR(20), Specialty VARCHAR(30), LicenseDate DATE, PRIMARY KEY(LicenseNum))
+--------------
+
+Query OK, 0 rows affected (0.20 sec)
+
+--------------
+CREATE TABLE Hospital (HospitalCode VARCHAR(3) NOT NULL, Name VARCHAR(20), City VARCHAR(20), Province VARCHAR(2), BedNum INT, PRIMARY KEY(HospitalCode))
+--------------
+
+Query OK, 0 rows affected (0.58 sec)
+
+--------------
+CREATE TABLE Treats (DoctorNum VARCHAR(4), PatientOHIP INT, PRIMARY KEY(DoctorNum, PatientOHIP), CONSTRAINT FOREIGN KEY(DoctorNum) REFERENCES Doctors(LicenseNum) ON DELETE CASCADE, FOREIGN KEY(PatientOHIP) REFERENCES Patient(OHIP) ON DELETE CASCADE)
+--------------
+
+Query OK, 0 rows affected (0.06 sec)
+
+--------------
+ALTER TABLE Doctors ADD Hospital VARCHAR(3)
+--------------
+
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE Doctors ADD CONSTRAINT FOREIGN KEY (Hospital) REFERENCES Hospital(HospitalCode)
+--------------
+
+Query OK, 0 rows affected (0.11 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE Hospital ADD ManagerID VARCHAR(4)
+--------------
+
+Query OK, 0 rows affected (0.07 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE Hospital ADD CONSTRAINT FOREIGN KEY (ManagerID) REFERENCES Doctors(LicenseNum)
+--------------
+
+Query OK, 0 rows affected (0.17 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+ALTER TABLE Hospital ADD MgrStartDate DATE
+--------------
+
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+--------------
+SHOW TABLES
+--------------
+
++-----------------------------+
+| Tables_in_aliang27assign2db |
++-----------------------------+
+| Doctors                     |
+| Hospital                    |
+| Patient                     |
+| Treats                      |
++-----------------------------+
+4 rows in set (0.00 sec)
+
+Bye

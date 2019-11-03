@@ -1,0 +1,31 @@
+USE aliang27assign2db;
+
+-- Attempt to delete doctor who got their license before Jan 1, 1965
+DELETE FROM Doctors WHERE LicenseDate < '1965-01-01';
+
+-- Output reason why above delete command did not work
+SELECT 'Could not delete Doctors who got their license before Jan 1, 1965 because they are heads at a hospital' as '';
+
+-- Display tables
+SELECT * FROM Doctors;
+SELECT * FROM Patient;
+SELECT * FROM Treats;
+SELECT * FROM Hospital;
+
+-- Create view to show info of the patients who were treated by the heads of hospitals and the hospital and doctor info
+CREATE VIEW TreatedByHeads AS SELECT P.FirstName, P.LastName, H.Name, D.LastName AS 'DoctorLastName' FROM Treats AS T, Patient AS P, Doctors AS D, Hospital AS H WHERE T.DoctorNum = D.LicenseNum AND D.LicenseNum = H.ManagerID AND P.OHIP = T.PatientOHIP AND P.OHIP IN (SELECT PatientOHIP FROM Treats WHERE DoctorNum IN (SELECT ManagerID FROM Hospital WHERE MgrStartDate > '1995-12-31'));
+
+SELECT * FROM TreatedByHeads;
+
+-- Delete doctor whose last name is Clooney
+SELECT * FROM Doctors;
+SELECT * FROM Treats;
+DELETE FROM Doctors WHERE LastName="Clooney";
+SELECT * FROM Doctors;
+SELECT * FROM Treats;
+
+-- Delete doctors who are surgeons 
+SELECT * FROM Doctors;
+DELETE FROM Doctors WHERE Specialty="Surgeon";
+
+-- The delete command did not delete the rows because some of the heads at Hospitals are also Surgeons 

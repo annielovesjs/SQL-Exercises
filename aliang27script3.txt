@@ -1,0 +1,40 @@
+USE aliang27assign2db;
+
+-- Query 1
+SELECT LastName FROM Patient;
+
+-- Query 2
+SELECT DISTINCT LastName FROM Patient;
+
+-- Query 3
+SELECT * FROM Doctors GROUP BY LastName;
+
+-- Query 4
+SELECT Name, HospitalCode FROM Hospital WHERE BedNum > 1500;
+
+-- Query 5
+SELECT LastName, FirstName FROM Doctors WHERE Hospital = (SELECT HospitalCode FROM Hospital WHERE Name="St. Joseph");
+
+-- Query 6
+SELECT FirstName, LastName FROM Patient WHERE LastName LIKE "G%";
+
+-- Query 7
+SELECT P.FirstName, P.LastName FROM Patient AS P, Treats AS T WHERE P.OHIP = T.PatientOHIP AND T.DoctorNum = (SELECT LicenseNum FROM Doctors WHERE LastName="Clooney");
+
+-- Query 8
+SELECT Name, City, LastName FROM Hospital AS H INNER JOIN Doctors AS D ON H.ManagerID = D.LicenseNum;
+
+-- Query 9
+SELECT SUM(BedNum) AS "Total Number of Beds" FROM Hospital;
+
+-- Query 10
+SELECT P.FirstName AS PatientName, D.FirstName AS DoctorName FROM Patient AS P, Treats AS T, Doctors AS D WHERE T.PatientOHIP = P.OHIP AND D.LicenseNum = T.DoctorNum AND T.DoctorNum IN (SELECT ManagerID FROM Hospital);
+
+-- Query 11
+SELECT LastName, FirstName FROM Doctors WHERE Specialty = "Surgeon" AND Hospital IN (SELECT HospitalCode FROM Hospital WHERE Name="Victoria");
+
+-- Query 12
+SELECT FirstName FROM Doctors WHERE LicenseNum NOT IN (SELECT DoctorNum FROM Treats);
+
+-- Query 13
+SELECT FirstName, LastName FROM Doctors WHERE LicenseNum IN (SELECT DoctorNum FROM Treats GROUP BY DoctorNum HAVING COUNT(PatientOHIP) > 1);
